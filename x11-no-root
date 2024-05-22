@@ -1,6 +1,6 @@
 #firefox
-www-client/firefox X clang -dbus -debug eme-free -geckodriver -gmp-autoupdate hardened hwaccel -jack jumbo-build lto \
-  openh264 pgo -screencast -selinux -telemetry -valgrind -wayland -wifi
+www-client/firefox X clang -debug eme-free -geckodriver -gmp-autoupdate hardened hwaccel -jack jumbo-build lto \
+  openh264 pgo -telemetry
 
 ######################
 #linux-firmware
