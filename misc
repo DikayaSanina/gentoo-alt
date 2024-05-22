@@ -1,0 +1,11 @@
+#grub
+grub-install --target=x86_64-efi --efi-directory=/boot
+
+#list groups
+awk -F':' '{ print $1 }' /etc/group
+
+#picom conf
+grep '^[^#]' ~/.config/picom.conf
+
+#world list
+/var/lib/portage/world
