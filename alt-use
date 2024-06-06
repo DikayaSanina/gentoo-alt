@@ -1,0 +1,31 @@
+#installkernel
+sys-kernel/installkernel dracut
+
+#btrfs
+sys-fs/btrfs-progs -convert -reiserfs
+
+#grub
+sys-boot/grub -themes
+
+#doas
+app-admin/doas persist
+
+#firefox
+www-client/firefox -gmp-autoupdate eme-free hardened hwaccel openh264
+media-libs/libvpx postproc
+
+#xorg
+x11-base/xorg-server xvfb
+
+#pipewire
+media-video/pipewire sound-server pipewire-alsa
+
+#nvidia
+x11-drivers/nvidia-drivers tools
+
+#telegram
+media-video/ffmpeg vpx opus
+sys-libs/zlib minizip
+dev-qt/qtgui jpeg
+dev-qt/qtcore icu
+app-text/xmlto text
