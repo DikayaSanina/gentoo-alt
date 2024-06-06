@@ -1,0 +1,9 @@
+#fstab
+# UUID=cce0d227-e114-4cb6-a9d0-049d573a9b3c
+/dev/nvme0n1p3  /       btrfs   rw,relatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/        0 0
+
+# UUID=E9D9-BC87
+/dev/nvme0n1p1  /efi       vfat    rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro        0 2
+
+# UUID=8427a2b3-e9f0-4050-b439-fe5ceedf008c
+/dev/nvme0n1p2  none    swap    defaults        0 0
