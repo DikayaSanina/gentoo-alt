@@ -1,4 +1,5 @@
-#installkernel
+#kernel
+sys-kernel/linux-firmware compress-zstd
 sys-kernel/installkernel dracut
 
 #btrfs
