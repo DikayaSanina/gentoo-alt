@@ -19,7 +19,6 @@ links https://www.gentoo.org/ -> Download stage3-openrc
 tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #EDIT MAKE.CONF AND CHROOT-INSTALL/MIRRORS/FLAGS#
-nano /mnt/gentoo/etc/portage/make.conf -> paste from git
 cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 
 mount --types proc /proc /mnt/gentoo/proc
@@ -43,6 +42,10 @@ emerge --sync
 
 eselect profile list -> confirm that minimal profile is selected
 
+emerge -av dev-vcs/git
+git clone https://github.com/DikayaSanina/gentoo-alt.git
+nano /mnt/gentoo/etc/portage/make.conf -> paste from git
+
 emerge --ask --oneshot app-portage/cpuid2cpuflags
 echo "*/* $(cpuid2cpuflags)" > /etc/portage/package.use/00cpu-flags
 
@@ -60,15 +63,24 @@ locale-gen
 eselect locale list -> en
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#KERNEL#
+#KERNEL/FSTAB#
+emerge -av sys-kernel/linux-firmware sys-kernel/gentoo-sources sys-kernel/installkernel sys-kernel/genkernel
+cd /usr/src/linux -> config kernel
+make && make modules_install && make install
+genkernel --install --kernel-config=/usr/src/linux/.config initramfs
 
+cd -> genfstab script location
+chmod +x genfstab
+./genfstab /mnt/gentoo > /mnt/gentoo/etc/fstab
+nano /etc/fstab -> edit
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#HOSTNAME AND POST INSTALL#
+echo gentoo > /etc/hostname
+emerge -av net-misc/dhcpcd
+rc-update add dhcpcd default
+rc-service dhcpcd start
 
-
-
-
-
-
-
+nano /etc/hosts -> 127.0.0.1 gentoo
 
 
 
