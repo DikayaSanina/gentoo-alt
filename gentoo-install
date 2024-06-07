@@ -82,13 +82,51 @@ rc-service dhcpcd start
 
 nano /etc/hosts -> 127.0.0.1 gentoo
 
+emerge -av sys-boot/grub
+grub-install /dev/nvme0n1
+grub-install --efi-directory=/efi
+nano /etc/default/grub -> GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+grub-mkconfig -o /boot/grub/grub.cfg
 
+useradd -mG wheel,users,video,usb -s /bin/bash alt
+passwd alt -> type password
 
+emerge -av app-admin/doas
+nano /etc/doas.conf -> permit persist setenv { XAUTHORITY LANG LC_ALL } :wheel
 
+emerge -av sys-boot/efibootmgr sys-fs/xfsprogs app-portage/gentoolkit www-client/links sys-auth/elogind sys-apps/dbus
+rc-update add elogind boot
+rc-service elogind start
+rc-update add dbus default
+rc-service dbus start
 
+emerge -av x11-base/xorg-server x11-apps/xinit x11-misc/hsetroot x11-misc/xcompmgr x11-drivers/nvidia-drivers x11-apps/xrdb 
 
+emerge -av media-video/pipewire sys-auth/rtkit media-sound/alsa-utils
+usermod -aG pipewire alt
 
+mkdir -p /etc/X11/xorg.conf.d/00-keyboard.conf
+nano /etc/X11/xorg.conf.d/00-keyboard.conf 
+->
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "us,ru"
+        Option "XkbModel" "pc105"
+        Option "XkbOptions" "grp:alt_shift_toggle"
+EndSection 
+<-
 
+cd /
+rm /stage3-*.tar.*
+
+exit to livecd
+cd
+sudo umount -a
+sudo reboot
+
+git clone https://github.com/DikayaSanina/suckless.git
+doas clean make install -> all of it
 
 
 
