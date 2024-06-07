@@ -1,0 +1,99 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#DISK PREPARATION AND STAGE3#
+cfdisk /dev/nvme0n1 -> gpt
+EFI - 1G p1
+SWAP - 16G p2
+ROOT - ALL ELSE p3
+
+mkfs.fat -F 32 /dev/nvme0n1p1
+mkswap /dev/nvme0n1p2
+swapon /dev/nvme0n1p2
+mkfs.xfs /dev/nvme0n1p3
+
+mkdir -p /mnt/gentoo
+mkdir -p /mnt/gentoo/efi
+mount /dev/nvme0n1p3 /mnt/gentoo
+
+cd /mnt/gentoo
+links https://www.gentoo.org/ -> Download stage3-openrc
+tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#EDIT MAKE.CONF AND CHROOT-INSTALL/MIRRORS/FLAGS#
+nano /mnt/gentoo/etc/portage/make.conf -> paste from git
+cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+
+mount --types proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+mount --bind /run /mnt/gentoo/run
+mount --make-slave /mnt/gentoo/run
+
+chroot /mnt/gentoo /bin/bash
+source /etc/profile
+export PS1="(chroot) ${PS1}"
+
+mount /dev/nvme0n1p1 /efi
+
+emerge-webrsync
+emerge --ask --verbose --oneshot app-portage/mirrorselect
+mirrorselect -i -o >> /etc/portage/make.conf
+emerge --sync
+
+eselect profile list -> confirm that minimal profile is selected
+
+emerge --ask --oneshot app-portage/cpuid2cpuflags
+echo "*/* $(cpuid2cpuflags)" > /etc/portage/package.use/00cpu-flags
+
+emerge --ask --verbose --update --deep --newuse @world
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#TIME AND LOCALE#
+echo "Europe/Samara" > /etc/timezone
+emerge --config sys-libs/timezone-data
+
+nano /etc/locale.gen -> 
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+
+locale-gen
+eselect locale list -> en
+env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#KERNEL#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
